@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from flask_login import login_user, login_required, logout_user
+from flask_login import current_user, login_user, login_required, logout_user ,current_user
 
 auth = Blueprint('auth', __name__)
 
@@ -23,7 +23,7 @@ def login():
         else:
             flash('Email does not exist.', category='error')
 
-    return render_template("login.html")
+    return render_template("login.html", user=current_user)
 
 @auth.route('/logout')
 @login_required
@@ -53,8 +53,8 @@ def signup():
         else:
             new_user = User(email=email, firstName=firstName, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
-            db.session.commit
+            db.session.commit()
             login_user(new_user, remember=True)
             flash('Your account has been created!', category='success')
             return redirect(url_for('views.home'))
-    return render_template("signup.html")
+    return render_template("signup.html", user=current_user)
