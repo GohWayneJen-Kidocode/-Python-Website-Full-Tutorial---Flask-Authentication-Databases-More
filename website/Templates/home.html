@@ -2,18 +2,19 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 <h1 align="center">Notes</h1>
+
+<form method="POST" class="py-3">
+        <textarea name="note" class="form-control" id="note" ></textarea>
+        <br>
+        <div align="center">
+            <button type="submit" class="btn btn-primary">Add Note</button>
+        </div>
+</form>
 <ul class="list-group list-group-flush" id="notes">
     {% for note in user.notes %}
-    <li class="list-group-item">{{ note.data }}
-        <button class="close" type="button" onclick="deleteNote({{ note.id }})"><span aria-hidden="true">&times;</span></button>
+    <li class="list-group-item border-bottom pb-4">{{ note.data }}
+        <a class="close" href="{{url_for('views.delete_note',id=note.id)}}"><span aria-hidden="true">&times;</span></a>
     </li>
     {% endfor %}
 </ul>
-<form method="POST">
-        <textarea name="note" id="note" class=""form-control></textarea>
-        <br>
-        <div align="center">
-            <button type="submit" class="btn btn-primary"></button>
-        </div>
-</form>
 {% endblock %}

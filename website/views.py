@@ -1,5 +1,5 @@
 from . import db
-from flask import render_template, Blueprint, request, flash, jsonify
+from flask import render_template, Blueprint, request, flash, redirect,url_for
 from flask_login import login_required, current_user
 from .models import Note
 import json
@@ -22,14 +22,15 @@ def home():
 
     return render_template('home.html', user=current_user)
 
-@views.route('/delete-note', methods=['POST'])
-def delete_note():
-    note =  json.loads(request.data)
-    noteId = note['noteId']
-    note = Note.query.get('noteId')
+@views.route('/delete-note/<int:id>', methods=['GET'])
+def delete_note(id):
+    # note =  json.loads(request.data)
+    # noteId = note['noteId']
+    note = Note.query.get(id)
     if note:
         if note.user_id == current_user.id:
-            db.session.delete('note')
+            db.session.delete(note)
             db.session.commit()
+            print('the record has been deleted ')
 
-    return jsonify({})
+    return redirect(url_for('views.home'))
